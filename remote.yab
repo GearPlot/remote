@@ -1,0 +1,164 @@
+#!yab
+
+// Simple script to control a Roku TV using cURL
+
+// Set your Roku TV's IP address here
+ipAddress$ = "192.168.1.1"
+
+// Set up shortcut buttons for your favorite app
+appOne$ = "Pluto TV"   // Name of the app (for your reference)
+appOneID$ = "74519"    // The app's Roku ID (find all IDs by running: curl "http://[YOUR-IP]:8060/query/apps")
+
+appTwo$ = "Tubi TV"
+appTwoID$ = "41468"
+
+appThree$ = "Netflix"
+appThreeID$ = "12"
+
+appFour$ = "YouTube"
+appFourID$ = "837"
+
+appFive$ = "My Media"
+appFiveID$ = "2213"
+
+appSix$ = "Live TV"
+appSixID$ = "tvinput.dtv"
+
+
+OpenRemoteWin()
+
+dim msg$(1)
+while(not quitting)
+
+	nCommands = token(message$, msg$(), "|")
+	for everyCommand = 1 to nCommands
+	
+	if (instr(msg$, "Quit")) then quitting = true
+	endif
+	 
+	switch(msg$(everyCommand))
+	
+		case "btnOne":
+			system("curl -s -d '' http://"+ipAddress$+":8060/launch/"+appOneID$+" &")
+		break
+		
+		case "btnTwo":
+			system("curl -s -d '' http://"+ipAddress$+":8060/launch/"+appTwoID$+" &")
+		break
+		
+		case "btnThree":
+			system("curl -s -d '' http://"+ipAddress$+":8060/launch/"+appThreeID$+" &")
+		break
+		
+		case "btnFour":
+			system("curl -s -d '' http://"+ipAddress$+":8060/launch/"+appFourID$+" &")
+		break
+		
+		case "btnFive":
+			system("curl -s -d '' http://"+ipAddress$+":8060/launch/"+appFiveID$+" &")
+		break
+		
+		case "btnSix":
+			system("curl -s -d '' http://"+ipAddress$+":8060/launch/"+appSixID$+" &")
+		break
+		
+		case "btnBack":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/Back &")
+		break
+		case "btnHome":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/Home &")
+		break
+		
+		case "btnUp":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/Up &")
+		break
+		
+		case "btnDown":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/Down &")
+		break
+		
+		case "btnLeft":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/Left &")
+		break
+		
+		case "btnRight":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/Right &")
+		break
+		
+		case "btnOk":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/Select &")
+		break
+		
+		case "btnVolDn":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/VolumeDown &")
+		break
+		
+		case "btnVolUp":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/VolumeUp &")
+		break
+		
+		case "btnMute":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/VolumeMute &")
+		break
+		
+		case "btnPlay":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/Play &")
+		break
+		
+		case "btnRW":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/Rev &")
+		break
+		
+		case "btnFF":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/Fwd &")
+		break
+		
+		case "btnReplay":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/InstantReplay &")
+		break
+		
+		case "btnInfo":
+			system("curl -s -d '' http://"+ipAddress$+":8060/keypress/Info &")
+		break
+		
+		case "RemoteWin:_QuitRequested":
+		case "btnExit":
+			quitting = true
+		break
+		
+	end switch
+next everyCommand
+wend
+window close "RemoteWin"
+
+sub OpenRemoteWin()
+
+window open 100, 100 to 280, 500, "RemoteWin", "Roku Remote"
+window set "RemoteWin", "flags", "not-zoomable, not-h-resizable, not-v-resizable"
+option set "RemoteWin", "focus", true
+// ========== STANDARD BUTTONS ==========
+button 10,10 to 85,35, "btnBack", "Back", "RemoteWin"
+button 95,10 to 170,35, "btnHome", "Home", "RemoteWin"
+button 75,59 to 105,89, "btnUp", "^", "RemoteWin"
+button 75,90 to 105,120, "btnOk", "OK", "RemoteWin"
+button 75,121 to 105,151, "btnDown", "v", "RemoteWin"
+button 106,90 to 136,120, "btnRight", ">", "RemoteWin"
+button 44,90 to 74,120, "btnLeft", "<", "RemoteWin"
+button 5,170 to 60,195, "btnVolDn", "- Vol.", "RemoteWin"
+button 63,170 to 117,195, "btnMute", "Mute", "RemoteWin"
+button 120,170 to 175,195, "btnVolUp", "Vol. +", "RemoteWin"
+button 47,210 to 72,235, "btnReplay", "R", "RemoteWin"
+button 77,210 to 102,235, "btnSleep", "S", "RemoteWin"
+button 107,210 to 132,235, "btnInfo", "I", "RemoteWin"
+button 10,250 to 60,275, "btnRW", "<<", "RemoteWin"
+button 120,250 to 170,275, "btnFF", ">>", "RemoteWin"
+button 65,250 to 115,275, "btnPlay", ">  II", "RemoteWin"
+// ========== CUSTOM BUTTONS FOR APPS ==========
+button 10,290 to 85,315, "btnOne", appOne$, "RemoteWin"
+button 95,290 to 170,315, "btnTwo", appTwo$, "RemoteWin"
+button 10,320 to 85,345, "btnThree", appThree$, "RemoteWin"
+button 95,320 to 170,345, "btnFour", appFour$, "RemoteWin"
+button 10,350 to 85,375, "btnFive", appFive$, "RemoteWin"
+button 95,350 to 170,375, "btnSix", appSix$, "RemoteWin"
+
+end sub
